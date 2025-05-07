@@ -27,7 +27,7 @@ class Emitter {
     this.x = x;
     this.y = y;
     this.particles = [];
-    this.timer = 0; // ✅ ADDED TIMER
+    this.timer = 0; // ✅ Timer for slower emission
 
     for (let i = 0; i < 20; i++) {
       this.particles.push(new Particle(this.x, this.y));
@@ -44,7 +44,7 @@ class Emitter {
     }
 
     this.timer++;
-    if (this.timer % 4 === 0) { // ✅ SLOWER EMISSION RATE
+    if (this.timer % 4 === 0) { // ✅ Add new particle every 4 frames
       this.particles.push(new Particle(this.x, this.y));
     }
   }
@@ -56,6 +56,7 @@ class Particle {
     this.vel = createVector(random(-1, 1), random(-1, 1));
     this.acc = createVector(0, 0);
     this.lifetime = 255;
+    this.r = random(3, 7); // ✅ Random radius
   }
 
   applyForce(f) {
@@ -71,7 +72,7 @@ class Particle {
 
   draw() {
     fill(100);
-    ellipse(this.pos.x, this.pos.y, 5);
+    ellipse(this.pos.x, this.pos.y, this.r); // ✅ Use random radius
   }
 
   isDead() {
@@ -79,34 +80,6 @@ class Particle {
   }
 }
 
-
-
-// same code as above until the Particle class:
-
-class Particle {
-  constructor(x, y) {
-    this.pos = createVector(x, y);
-    this.vel = createVector(random(-1, 1), random(-1, 1));
-    this.acc = createVector(0, 0);
-    this.lifetime = 255;
-    this.r = random(3, 7); // ✅ NEW: Random radius
-  }
-
-  applyForce(f) {
-    this.acc.add(f);
-  }
-
-  update() {
-    this.vel.add(this.acc);
-    this.pos.add(this.vel);
-    this.acc.mult(0);
-    this.lifetime -= 2;
-  }
-
-  draw() {
-    fill(100);
-    ellipse(this.pos.x, this.pos.y, this.r); // ✅ USE RANDOM SIZE
-  }
 
   isDead() {
     return this.lifetime <= 0;
