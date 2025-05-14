@@ -1,4 +1,4 @@
-Emitters homework:
+Emitters homework; New Updated:
 
 let emitters = [];
 let G;
@@ -27,10 +27,21 @@ class Emitter {
     this.x = x;
     this.y = y;
     this.particles = [];
-    this.timer = 0; // ✅ Timer for slower emission
+    this.timer = 0;
 
     for (let i = 0; i < 20; i++) {
-      this.particles.push(new Particle(this.x, this.y));
+      this.particles.push(this.createRandomParticle());
+    }
+  }
+
+  createRandomParticle() {
+    let type = random([0, 1, 2]);
+    if (type === 0) {
+      return new Particle(this.x, this.y);
+    } else if (type === 1) {
+      return new ColorParticle(this.x, this.y);
+    } else {
+      return new SquareParticle(this.x, this.y);
     }
   }
 
@@ -44,8 +55,8 @@ class Emitter {
     }
 
     this.timer++;
-    if (this.timer % 4 === 0) { // ✅ Add new particle every 4 frames
-      this.particles.push(new Particle(this.x, this.y));
+    if (this.timer % 4 === 0) {
+      this.particles.push(this.createRandomParticle());
     }
   }
 }
@@ -56,7 +67,7 @@ class Particle {
     this.vel = createVector(random(-1, 1), random(-1, 1));
     this.acc = createVector(0, 0);
     this.lifetime = 255;
-    this.r = random(3, 7); // ✅ Random radius
+    this.r = random(3, 7);
   }
 
   applyForce(f) {
@@ -72,11 +83,35 @@ class Particle {
 
   draw() {
     fill(100);
-    ellipse(this.pos.x, this.pos.y, this.r); // ✅ Use random radius
+    ellipse(this.pos.x, this.pos.y, this.r);
   }
 
   isDead() {
     return this.lifetime <= 0;
+  }
+}
+
+class ColorParticle extends Particle {
+  constructor(x, y) {
+    super(x, y);
+    this.color = color(random(255), random(255), random(255));
+  }
+
+  draw() {
+    fill(this.color);
+    ellipse(this.pos.x, this.pos.y, this.r);
+  }
+}
+
+class SquareParticle extends Particle {
+  constructor(x, y) {
+    super(x, y);
+  }
+
+  draw() {
+    fill(50, 100, 200);
+    rectMode(CENTER);
+    rect(this.pos.x, this.pos.y, this.r * 2, this.r * 2);
   }
 }
 
